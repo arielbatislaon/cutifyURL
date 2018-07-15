@@ -7,7 +7,8 @@ class URLForm extends Component {
         super();
         this.state = {
             cutifiedURL: "",
-            originalURL: ""
+            originalURL: "",
+            linkError: false
         };
     }
 
@@ -35,7 +36,9 @@ class URLForm extends Component {
                 console.log(data);
                 this.setState({cutifiedURL: data.cutifiedURL});
             })
-        });
+        }).catch((error) => {
+            this.setState({linkError: true});
+        }) ;
     }
     render() {
         return (
@@ -47,6 +50,7 @@ class URLForm extends Component {
                     </div>
                 </div>
                 {this.state.cutifiedURL && <CutifiedURL cutifiedURL={this.state.cutifiedURL} />}
+                {this.state.linkError && <LinkError/>}
             </div>
         );
     }

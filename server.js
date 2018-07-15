@@ -10,7 +10,7 @@ const redis = require('redis');
 
 app.use(cors());
 
-app.use(bodyParser.json()); 
+app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 //create Redis client
@@ -27,7 +27,7 @@ app.post('/cut.ly', function (req, res) {
 
     // Create a hashed short version
     key = generateKey();
-    
+
     cutifiedURL = `${base_url}/cut.ly/${key}`;
 
     // Store them in Redis
@@ -39,18 +39,21 @@ app.post('/cut.ly', function (req, res) {
 //return original URL
 app.get('/cut.ly/:key', function (req, res) {
     // Declare variables
-    
+
     let key = req.params.key;
 
     client.get(key, function (error, originalURL) {
-        
-        if (error) {
+
+        if (error || !originalURL) {
             console.log(error);
-            throw error;
+            res.status(404);
+            res.send('URL NOT FOUND');
+        } else {
+            // redirect to original URL
+            console.log('GET originalURL ->' + originalURL);
+            res.redirect(originalURL);
         }
-        // redirect to original URL
-        console.log('GET originalURL ->' + originalURL);
-        res.redirect(originalURL);
+
     });
 });
 
@@ -69,27 +72,27 @@ app.listen(port, () => {
 
 
 
-var generateKey = function() {
- const ALPHANUMERIC= '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
- const KEY_LENGTH = 10;
- let returnKey = '';
- let alphaCharArray = ALPHANUMERIC.split('');  
- 
- do {
-    [...Array(KEY_LENGTH)].map(input =>{
-        returnKey += ALPHANUMERIC.charAt(Math.floor(Math.random() * ALPHANUMERIC.length));
-     })
-     client.get(returnKey, function (error, keyValue) {
-        
-        if (error) {
-            console.log(error);
-            throw error;
-        }
-        if(!!keyValue) {
-            returnKey = '';
-        } 
-    });
- } while(!returnKey) 
- 
-  return returnKey;
+var generateKey = function () {
+    const ALPHANUMERIC = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    const KEY_LENGTH = 10;
+    let returnKey = '';
+    let alphaCharArray = ALPHANUMERIC.split('');
+
+    do {
+        [...Array(KEY_LENGTH)].map(input => {
+            returnKey += ALPHANUMERIC.charAt(Math.floor(Math.random() * ALPHANUMERIC.length));
+        })
+        client.get(returnKey, function (error, keyValue) {
+
+            if (error) {
+                console.log(error);
+                throw error;
+            }
+            if (!!keyValue) {
+                returnKey = '';
+            }
+        });
+    } while (!returnKey)
+
+    return returnKey;
 }
