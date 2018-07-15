@@ -1,0 +1,32 @@
+{
+  "name": "url-minifier",
+  "version": "1.0.0",
+  "description": "url minifier service",
+  "main": "server.js",
+  "scripts": {
+    "dev": "nodemon server.js ",
+    "start": "node server.js"
+  },
+  "keywords": [
+    "URL",
+    "minifier",
+    "URL",
+    "shortener",
+    "URL",
+    "minimizer"
+  ],
+  "author": "Ariel Batislaon",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "express": "^4.16.3",
+    "redis": "^2.8.0"
+  },
+  "devDependencies": {
+    "babel": "^6.23.0",
+    "chai": "^4.1.2",
+    "cors": "^2.8.4",
+    "mocha": "^5.2.0",
+    "nodemon": "^1.18.1"
+  }
+}
